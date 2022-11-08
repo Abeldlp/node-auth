@@ -8,4 +8,9 @@ export class UserController {
     const users = await user.getAll();
     res.json(users);
   }
+
+  async createUser(req: Request, res: Response): Promise<void> {
+    const createdUser = await user.create(req.body);
+    res.json(createdUser);
+  }
 }
