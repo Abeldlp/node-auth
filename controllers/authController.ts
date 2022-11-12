@@ -41,18 +41,18 @@ export class AuthController {
     // Generate a token
     const token = jwt.sign(
       {
+        id: createdUser.id,
         username: createdUser.username,
         email: createdUser.email,
+        role: createdUser?.roleId,
       },
       process.env.JWT_KEY as string,
       { expiresIn: 60 * 60 }
     );
 
-    // Set header
-    res.set("Bearer ", token);
-
     // Send back token
     res.cookie("access_token", token).json({
+      message: `${createdUser.username} successfully created!`,
       token: token,
     });
   }
@@ -96,8 +96,10 @@ export class AuthController {
     //Generate new token
     const token = jwt.sign(
       {
+        id: selectedUser.id,
         username: selectedUser.username,
         email: selectedUser.email,
+        role: selectedUser?.roleId,
       },
       process.env.JWT_KEY as string,
       { expiresIn: 60 * 60 }
