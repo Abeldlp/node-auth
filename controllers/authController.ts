@@ -33,10 +33,17 @@ export class AuthController {
     const hashedPassword: string = await bcrypt.hash(body.password, 10);
 
     // Create the user
-    const createdUser: UserModel = await user.create({
+    const createdUser: UserModel | null = await user.create({
       ...body,
       password: hashedPassword,
     });
+
+    if (!createdUser) {
+      res.status(400).json({
+        message: "Something went wrong",
+      });
+      return;
+    }
 
     // Generate a token
     const token = jwt.sign(

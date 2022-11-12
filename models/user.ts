@@ -20,15 +20,20 @@ export class User {
     email: string;
     password: string;
     username: string;
-  }): Promise<UserModel> {
-    const user = await prisma.user.create({
-      data: {
-        email: userData.email,
-        password: userData.password,
-        username: userData.username,
-      },
-    });
-
-    return user;
+    role_id?: number;
+  }): Promise<UserModel | null> {
+    try {
+      const user = await prisma.user.create({
+        data: {
+          email: userData.email,
+          password: userData.password,
+          username: userData.username,
+          roleId: userData.role_id || null,
+        },
+      });
+      return user;
+    } catch (error) {
+      return null;
+    }
   }
 }
