@@ -1,6 +1,8 @@
 import { Request, Response } from "express";
 import { User } from "../models/user.js";
+import { User as UserModel } from "@prisma/client";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
 const user = new User();
 
@@ -31,14 +33,28 @@ export class AuthController {
     const hashedPassword: string = await bcrypt.hash(body.password, 10);
 
     // Create the user
-    user.create({ ...body, password: hashedPassword });
+    const createdUser: UserModel = await user.create({
+      ...body,
+      password: hashedPassword,
+    });
 
     // Generate a token
+    const token = jwt.sign(
+      {
+        username: createdUser.username,
+        email: createdUser.email,
+      },
+      process.env.JWT_KEY as string,
+      { expiresIn: 60 * 60 }
+    );
 
-    res.json({
-      requestBody: body,
-    });
+    // Set header
+    res.set("Bearer ", token);
+
     // Send back token
+    res.cookie("access_token", token).json({
+      token: token,
+    });
   }
 
   async login(req: Request, res: Response): Promise<void> {
@@ -76,7 +92,26 @@ export class AuthController {
       });
       return;
     }
-    // Else return token
-    res.send(`${selectedUser.username} you are logged in!`);
+
+    //Generate new token
+    const token = jwt.sign(
+      {
+        username: selectedUser.username,
+        email: selectedUser.email,
+      },
+      process.env.JWT_KEY as string,
+      { expiresIn: 60 * 60 }
+    );
+
+    // Set cookie token
+    res
+      .cookie("access_token", token, {
+        httpOnly: true,
+      })
+      .status(200)
+      .json({
+        message: `${selectedUser.username} you are logged in!`,
+        token: token,
+      });
   }
 }

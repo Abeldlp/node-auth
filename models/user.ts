@@ -1,5 +1,4 @@
-import { Prisma, PrismaClient, User as UserModel } from "@prisma/client";
-// import bcrypt from "bcrypt";
+import { PrismaClient, User as UserModel } from "@prisma/client";
 const prisma = new PrismaClient();
 
 export class User {
