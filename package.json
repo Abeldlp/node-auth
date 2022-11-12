@@ -9,7 +9,8 @@
     "build": "npx tsc",
     "start": "node dist/index.js",
     "dev": "concurrently \"npx tsc --watch\" \"nodemon -q dist/index.js\"",
-    "dev-ts": "nodemon -w 'src/**/*.ts' -x ts-node-esm --files -H -T server.ts"
+    "dev-ts": "nodemon -w 'src/**/*.ts' -x ts-node-esm --files -H -T server.ts",
+    "serve": "ts-node-esm server.ts"
   },
   "keywords": [],
   "author": "",

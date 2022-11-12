@@ -1,4 +1,4 @@
-import { PrismaClient, User as UserModel } from "@prisma/client";
+import { Prisma, PrismaClient, User as UserModel } from "@prisma/client";
 // import bcrypt from "bcrypt";
 const prisma = new PrismaClient();
 
@@ -8,7 +8,20 @@ export class User {
     return users;
   }
 
-  async create(userData: UserModel): Promise<UserModel> {
+  async getByEmail(userEmail: string): Promise<UserModel | null> {
+    const user = await prisma.user.findFirst({
+      where: {
+        email: userEmail,
+      },
+    });
+    return user;
+  }
+
+  async create(userData: {
+    email: string;
+    password: string;
+    username: string;
+  }): Promise<UserModel> {
     const user = await prisma.user.create({
       data: {
         email: userData.email,
