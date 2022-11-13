@@ -6,24 +6,30 @@ export class AuthMiddleware {
     //Check cookie is set
     if (!req.cookies?.access_token) {
       res.status(401).json({
-        message: "Unauthorized",
-        error: req.cookies,
+        message: "Token is not in cookies",
       });
       return;
     }
 
     // Verify token
-    const token: string | JwtPayload = jwt.verify(
+    jwt.verify(
       req.cookies.access_token,
-      process.env.JWT_KEY as string
+      process.env.JWT_KEY as string,
+      (err: any, decoded: any) => {
+        // Return if token has ben temperred
+        if (err) {
+          res.status(400).json({
+            error: "Invalid token",
+          });
+          return;
+        }
+
+        // Set user to request
+        // req. = decoded;
+
+        // Go to next function
+        next();
+      }
     );
-
-    if (typeof token === "string") {
-      res.status(400).json({
-        error: "Invalid token",
-      });
-    }
-
-    next();
   }
 }
