@@ -41,10 +41,7 @@ export class AuthController {
                 role: createdUser === null || createdUser === void 0 ? void 0 : createdUser.roleId,
             }, process.env.JWT_KEY, { expiresIn: 60 * 60 });
             // Send back token
-            res.cookie("access_token", token).json({
-                message: `${createdUser.username} successfully created!`,
-                token: token,
-            });
+            res.cookie("access_token", token).sendStatus(201);
         });
     }
     login(req, res) {
@@ -82,11 +79,7 @@ export class AuthController {
                 .cookie("access_token", token, {
                 httpOnly: true,
             })
-                .status(200)
-                .json({
-                message: `${selectedUser.username} you are logged in!`,
-                token: token,
-            });
+                .sendStatus(200);
         });
     }
 }
