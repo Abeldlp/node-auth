@@ -1,13 +1,11 @@
 import { Request, Response, NextFunction } from "express";
-import jwt, { JwtPayload } from "jsonwebtoken";
+import jwt, { VerifyErrors } from "jsonwebtoken";
 
 export class AuthMiddleware {
   async verifyToken(req: Request, res: Response, next: NextFunction) {
     //Check cookie is set
     if (!req.cookies?.access_token) {
-      res.status(401).json({
-        message: "Token is not in cookies",
-      });
+      res.sendStatus(401);
       return;
     }
 
@@ -15,17 +13,12 @@ export class AuthMiddleware {
     jwt.verify(
       req.cookies.access_token,
       process.env.JWT_KEY as string,
-      (err: any, decoded: any) => {
+      (err: VerifyErrors | null, decoded: {} | undefined) => {
         // Return if token has ben temperred
         if (err) {
-          res.status(400).json({
-            error: "Invalid token",
-          });
+          res.sendStatus(401);
           return;
         }
-
-        // Set user to request
-        // req. = decoded;
 
         // Go to next function
         next();

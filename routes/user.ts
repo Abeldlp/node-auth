@@ -7,6 +7,5 @@ const userController = new UserController();
 const auth = new AuthMiddleware();
 
 userRouter.get("/", auth.verifyToken, userController.getAllUsers);
-// userRouter.get("/", userController.getAllUsers);
 
 export { userRouter };

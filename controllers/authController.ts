@@ -71,18 +71,14 @@ export class AuthController {
     // Validate that request is correct
     if (!(body.email && body.password)) {
       // If badRequest abort
-      res.status(400).send({
-        error: "All fields are required",
-      });
+      res.sendStatus(400);
       return;
     }
     // Get user where email
     const selectedUser = await user.getByEmail(body.email);
 
     if (!selectedUser) {
-      res.status(401).send({
-        error: "Unauthorized",
-      });
+      res.sendStatus(401);
       return;
     }
 
@@ -94,9 +90,7 @@ export class AuthController {
 
     // If not same return unauthorized
     if (!correctPassword) {
-      res.status(401).send({
-        error: "Unauthorized",
-      });
+      res.sendStatus(401);
       return;
     }
 
