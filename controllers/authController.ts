@@ -58,10 +58,7 @@ export class AuthController {
     );
 
     // Send back token
-    res.cookie("access_token", token).json({
-      message: `${createdUser.username} successfully created!`,
-      token: token,
-    });
+    res.cookie("access_token", token).sendStatus(201);
   }
 
   async login(req: Request, res: Response): Promise<void> {
@@ -111,10 +108,6 @@ export class AuthController {
       .cookie("access_token", token, {
         httpOnly: true,
       })
-      .status(200)
-      .json({
-        message: `${selectedUser.username} you are logged in!`,
-        token: token,
-      });
+      .sendStatus(200);
   }
 }

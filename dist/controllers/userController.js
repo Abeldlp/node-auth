@@ -7,10 +7,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { PrismaClient } from "@prisma/client";
-const prisma = new PrismaClient();
-export const getAllUsers = (_, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const users = yield prisma.user.findMany();
-    res.json(users);
-});
+import { User } from "../models/user.js";
+const user = new User();
+export class UserController {
+    getAllUsers(_, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const users = yield user.getAll();
+            res.json(users);
+        });
+    }
+}
 //# sourceMappingURL=userController.js.map
