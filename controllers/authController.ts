@@ -80,7 +80,7 @@ export class AuthController {
     const selectedUser = await user.getByEmail(body.email);
 
     if (!selectedUser) {
-      res.status(429).send({
+      res.status(401).send({
         error: "Unauthorized",
       });
       return;
@@ -94,7 +94,7 @@ export class AuthController {
 
     // If not same return unauthorized
     if (!correctPassword) {
-      res.status(429).send({
+      res.status(401).send({
         error: "Unauthorized",
       });
       return;
